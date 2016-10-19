@@ -14,7 +14,9 @@ module.exports = () => {
 		);
 
 		process.send({
-			result: message.task.map((item) => item * 2)
+			result: message.task['task'].map( (item) => {
+				return item * 2;
+			})
 		});
 	});
 };

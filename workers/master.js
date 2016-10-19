@@ -1,6 +1,7 @@
 'use strict';
 
 let getSubTasks = require('./subTasks.js');
+//let gatherSubTask = require('./gatherSubTask.js');
 
 module.exports = () => {
 	let cpuCount = api.os.cpus().length;
@@ -18,8 +19,13 @@ module.exports = () => {
 
 	let results = [];
 
-	workers.forEach( (worker, i) => {
-		worker.send({ task: subTask[i] });
+	workers.forEach( (worker, index) => {
+		worker.send({
+			task: {
+				task: subTask[index],
+				index: index
+			}
+		});
 
 		worker.on('exit', (code) => {
 			console.log('exit ' + worker.process.pid + ' ' + code);
