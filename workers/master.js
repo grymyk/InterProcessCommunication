@@ -1,7 +1,8 @@
 'use strict';
 
-let getSubTasks = require('./subTasks.js');
+let getSubTasks = require('./getSubTask.js');
 let gatherSubTask = require('./gatherSubTask.js');
+let sortSubTask = require('./sortSubTask');
 
 module.exports = () => {
 	let cpuCount = api.os.cpus().length;
@@ -14,20 +15,16 @@ module.exports = () => {
 	}
 
     let task = [2, 17, 3, 2, 5, 7, 15, 22, 1, 14, 15, 9, 0, 11];
-    let taskLen = task.length;
-    console.log(' task: %j\n', task);
+	console.log('\n task: %j', task);
 
     let subTask = getSubTasks(cpuCount, task);
-    console.log(' subTask: %j\n', subTask);
+    console.log('\n subTask: %j', subTask);
 
 	let results = [];
 
-	workers.forEach( (worker, index) => {
+	workers.forEach( (worker, id) => {
 		worker.send({
-			task: {
-				task: subTask[index],
-				index: index
-			}
+			task: subTask[id]
 		});
 
 		worker.on('exit', (code) => {
@@ -36,14 +33,16 @@ module.exports = () => {
 
 		worker.on('message', (message) => {
 			console.log(
-				'message from worker ' + worker.process.pid + ': ' +
+				'\n message from worker ' + worker.process.pid + ': ' +
 				JSON.stringify(message)
 			);
 
-            results = gatherSubTask(results, message.result);
+            results.push(message);
 
-            if (results.length === taskLen) {
-				console.log(' results: %j\n', results);
+			if (results.length === cpuCount) {
+				results = sortSubTask(results);
+
+				console.log('\n results: %j', results);
 
                 process.exit(1);
             }

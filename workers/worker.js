@@ -1,22 +1,27 @@
 'use strict';
 
 module.exports = () => {
+	let idWorker = api.cluster.worker.id;
+
 	console.log(
-		'Hello from worker ' +
+		'\n Hello from worker ' +
 		process.pid + ' ' +
-		api.cluster.worker.id
+		idWorker
 	);
 
 	process.on('message', (message) => {
 		console.log(
-			'message to worker ' + process.pid +
+			'\n message to worker ' + process.pid +
 			' from master: ' + JSON.stringify(message)
 		);
 
+		let value = message.task.map( (item) => {
+						return item * 2;
+					});
+
 		process.send({
-			result: message.task['task'].map( (item) => {
-				return item * 2;
-			})
+			value: value,
+			id: idWorker
 		});
 	});
 };
