@@ -11,8 +11,8 @@ application.master = require('./master.js');
 application.worker = require('./worker.js');
 
 if (api.cluster.isMaster) {
-    application.master();
+	application.master();
 } else {
-    application.worker();
+	application.worker();
 }
 
