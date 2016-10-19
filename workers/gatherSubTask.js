@@ -1,16 +1,10 @@
 'use strict';
 
-module.exports = (tasks) {
-	
+module.exports = (results, result) => {
+    for (let i = 0, len = result.length; i < len; i += 1) {
+        results.push( result[i] );
+    }
 
-	tasks.sort((a, b) => {
-		if (a > b) {
-			return -1;
-		}
-
-		if (b > a) {
-			return 1;
-		}
-	});
+    return results;
 };
 
