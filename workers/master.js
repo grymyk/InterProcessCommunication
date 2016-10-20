@@ -1,8 +1,6 @@
 'use strict';
 
-let getSubTasks = require('./getSubTask.js');
-let gatherSubTask = require('./gatherSubTask.js');
-let sortSubTask = require('./sortSubTask');
+let subtask = require('../subtask');
 
 module.exports = () => {
 	let cpuCount = api.os.cpus().length;
@@ -17,7 +15,7 @@ module.exports = () => {
     let task = [2, 17, 3, 2, 5, 7, 15, 22, 1, 14, 15, 9, 0, 11];
 	console.log('\n task: %j', task);
 
-    let subTask = getSubTasks(cpuCount, task);
+    let subTask = subtask.get(cpuCount, task);
     console.log('\n subTask: %j', subTask);
 
 	let results = [];
@@ -40,7 +38,7 @@ module.exports = () => {
             results.push(message);
 
 			if (results.length === cpuCount) {
-				results = sortSubTask(results);
+				results = subtask.arrange(results);
 
 				console.log('\n results: %j', results);
 
