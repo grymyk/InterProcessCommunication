@@ -1,6 +1,7 @@
 'use strict';
 
 let subtask = require('../subtask');
+let data = require('../data');
 
 module.exports = () => {
 	let cpuCount = api.os.cpus().length;
@@ -12,7 +13,7 @@ module.exports = () => {
 		workers.push(worker);
 	}
 
-    let task = [2, 17, 3, 2, 5, 7, 15, 22, 1, 14, 15, 9, 0, 11];
+    let task = data.get();
 	console.log('\n task: %j', task);
 
     let subTask = subtask.get(cpuCount, task);
