@@ -5,6 +5,8 @@ let data = require('../data');
 
 module.exports = () => {
 	let cpuCount = api.os.cpus().length;
+    console.log(' CPU Count length: ', cpuCount);
+
 	let workers = [];
 
 	for (let i = 0; i < cpuCount; i += 1) {
@@ -22,9 +24,9 @@ module.exports = () => {
 	let results = [];
 
 	workers.forEach( (worker, id) => {
-		worker.send({
-			task: subTask[id]
-		});
+		worker.send(
+            { task: subTask[id] }
+        );
 
 		worker.on('exit', (code) => {
 			console.log('exit ' + worker.process.pid + ' ' + code);
@@ -32,7 +34,7 @@ module.exports = () => {
 
 		worker.on('message', (message) => {
 			console.log(
-				'\n message from worker ' + worker.process.pid + ': ' +
+				'\n "Done task" from worker ' + worker.process.pid + ': ' +
 				JSON.stringify(message)
 			);
 

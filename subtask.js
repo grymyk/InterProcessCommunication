@@ -4,7 +4,7 @@ function gatherSubTask(results, result) {
 	return results.push(results);
 }
 
-function changeTask(task) {
+function sortTask(task) {
 	task.sort( (a, b) => {
         if (a > b) {
             return 1;
@@ -26,7 +26,7 @@ function get(cpuCount, tasks) {
     let end = subTaskSize;
     let len = subTaskSize * cpuCount;
 
-    changeTask(tasks);
+    sortTask(tasks);
 
     for ( ; end <= len; ) {
         subTasks.push( tasks.slice(begin, end) );
@@ -38,7 +38,7 @@ function get(cpuCount, tasks) {
     return subTasks;
 }
 
-function sortBy(a, b) {
+function sortById(a, b) {
     let key = 'id';
 
     if (a[key] > b[key]) {
@@ -52,7 +52,8 @@ function sortBy(a, b) {
 
 
 function arrange(tasks) {
-	tasks.sort(sortBy);
+	tasks.sort( sortById );
+
     let result = [];
 
     for (let i = 0, len = tasks.length; i < len; i += 1) {
@@ -68,7 +69,6 @@ function arrange(tasks) {
 
 module.exports = {
 	get,
-
 	arrange
 };
 
