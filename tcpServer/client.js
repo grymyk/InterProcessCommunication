@@ -5,7 +5,7 @@ global.api = {};
 api.net = require('net');
 
 let socket = new api.net.Socket();
-let user;
+let user = null;
 
 socket.connect({
 		port: 2000,
