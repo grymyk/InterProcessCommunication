@@ -3,6 +3,7 @@
 global.api = {};
 
 api.net = require('net');
+api.workers = require('../workers');
 
 let user = {
 	name: 'Marcus Aurelius',
@@ -20,6 +21,8 @@ let server = api.net.createServer( (socket) => {
 
     socket.on('data', (data) => {
         console.log('Data received (by server): ' + data);
+
+        api.workers.get(data);
     });
 });
 

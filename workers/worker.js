@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = () => {
+module.exports = (data) => {
     let id = api.cluster.worker.id;
 
     console.log(
