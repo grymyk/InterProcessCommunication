@@ -1,16 +1,16 @@
 'use strict';
 
-global.api = {};
+global.tcp = {};
 
-api.net = require('net');
-api.workers = require('../workers');
+tcp.net = require('net');
+tcp.workers = require('../workers');
 
 let user = {
 	name: 'Marcus Aurelius',
 	age: 1895
 };
 
-let server = api.net.createServer( (socket) => {
+let server = tcp.net.createServer( (socket) => {
     socket.write( JSON.stringify(user) );
 
     console.log('Connected: ' + socket.localAddress);
@@ -22,7 +22,7 @@ let server = api.net.createServer( (socket) => {
     socket.on('data', (data) => {
         console.log('Data received (by server): ' + data);
 
-        api.workers.get(data);
+        tcp.workers.get(data);
     });
 });
 

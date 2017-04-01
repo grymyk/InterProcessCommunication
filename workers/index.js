@@ -1,29 +1,31 @@
 'use strict';
 
-global.api = {};
+global.workers = {};
 
-api.cluster = require('cluster');
-api.os = require('os');
-api.data = require('../db');
+workers.cluster = require('cluster');
+workers.os = require('os');
+workers.data = require('../db');
 
-global.application = {};
+global.workers.application = {};
 
-application.master = require('./master.js');
-application.worker = require('./worker.js');
+let app = global.workers.application;
+
+app.master = require('./master.js');
+app.worker = require('./worker.js');
 
 function init(data) {
-    if (api.cluster.isMaster) {
-        application.master(data);
+    if (workers.cluster.isMaster) {
+        app.master(data);
     } else {
-	    application.worker(data);
+	    app.worker(data);
     }
 };
 
-api.data.connect();
+workers.data.connect();
 
 if (module.parent) {
     module.exports.get = init; 
 } else {
-    init( api.data.get() );
+    init( workers.data.get() );
 }
 

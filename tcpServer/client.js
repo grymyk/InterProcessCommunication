@@ -1,18 +1,20 @@
 'use strict';
 
-global.api = {};
+global.tcp = {};
 
-api.net = require('net');
-api.data = require('../data');
+tcp.net = require('net');
+tcp.data = require('../db');
 
-let socket = new api.net.Socket();
+tcp.data.connect();
+
+let socket = new tcp.net.Socket();
 let user = null;
 
 socket.connect({
 		port: 2000,
 		host: '127.0.0.1',
 	}, () => {
-        let data = JSON.stringify( api.data.get() );
+        let data = JSON.stringify( tcp.data.get() );
 
         //socket.write('Hello from client');
         socket.write(data);
