@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = (data) => {
-    let id = api.cluster.worker.id;
+module.exports = () => {
+    let id = multicore.cluster.worker.id;
 
     console.log(
         '\n "Ready" worker ' +

@@ -1,31 +1,34 @@
 'use strict';
 
-global.workers = {};
+global.multicore = {};
 
-workers.cluster = require('cluster');
-workers.os = require('os');
-workers.data = require('../db');
+multicore.cluster = require('cluster');
+multicore.os = require('os');
+multicore.data = require('../db');
 
-global.workers.application = {};
-
-let app = global.workers.application;
+global.app = {};
 
 app.master = require('./master.js');
-app.worker = require('./worker.js');
+//app.worker = require('./worker.js');
+app.tcpworker = require('./tcpworker.js');
 
 function init(data) {
-    if (workers.cluster.isMaster) {
+    if (multicore.cluster.isMaster) {
+        console.log(`Master ${process.pid} is running`);
+
         app.master(data);
     } else {
-	    app.worker(data);
+        console.log(`Worker ${process.pid} is running`);
+
+        app.worker();
     }
 };
 
-workers.data.connect();
+multicore.data.connect();
 
 if (module.parent) {
     module.exports.get = init; 
 } else {
-    init( workers.data.get() );
+    init( multicore.data.get() );
 }
 

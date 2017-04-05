@@ -3,13 +3,13 @@
 let subtask = require('../subtask');
 
 module.exports = (task) => {
-    let cpuCount = api.os.cpus().length;
+    let cpuCount = multicore.os.cpus().length;
     console.log(' CPU Count: ', cpuCount);
 
     let workers = [];
 
     for (let i = 0; i < cpuCount; i += 1) {
-        let worker = api.cluster.fork();
+        let worker = multicore.cluster.fork();
 
         workers.push(worker);
     }
@@ -26,8 +26,14 @@ module.exports = (task) => {
             task: subTask[id]
         });
 
-        worker.on('exit', (code) => {
-            console.log('exit ' + worker.process.pid + ' ' + code);
+        worker.on('exit', (code, signal) => {
+            if (signal) {
+                console.log(` Worker ${worker.process.pid} was killed by signal: ${signal}`);
+            } else if (code !== 0) {
+                console.log('gyc  exit ' + worker.process.pid + ' ' + code);
+            } else {
+                console.log(`worker ${worker.process.pid} is successed`);
+            }
         });
 
         worker.on('message', (message) => {
@@ -45,6 +51,23 @@ module.exports = (task) => {
 
                 process.exit(1);
             }
+        });
+
+        worker.on('disconnent', () => {
+            console.log(' Worker has disconnected');
+        });
+
+        worker.on('error', (err) => {
+            throw err;
+        });
+
+        worker.on('listening', (address) => {
+            console.log(`Worker ${address} is listening`);
+        });
+
+        worker.on('uncaughtException', (err) => {
+            console.log('An uncaught error occurred!');
+            console.log('error stack: ', err.stack);
         });
     });
 };

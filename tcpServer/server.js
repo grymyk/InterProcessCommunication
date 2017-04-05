@@ -11,18 +11,18 @@ let user = {
 };
 
 let server = tcp.net.createServer( (socket) => {
-    socket.write( JSON.stringify(user) );
-
     console.log('Connected: ' + socket.localAddress);
 
     socket.on('end', () => {
         console.log('client disconnected');
     });
 
+    socket.write( JSON.stringify(user) );
+
     socket.on('data', (data) => {
         console.log('Data received (by server): ' + data);
 
-        tcp.workers.get(data);
+        tcp.workers.get( JSON.parse(data) );
     });
 });
 
